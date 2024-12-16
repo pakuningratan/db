@@ -224,7 +224,7 @@ class Core
             }
             if ($this->config('charset')) {
                 if ($dbtype === 'pgsql') {
-                    $dsn .= ';options=\'--client_encoding='.$this->config('charset').'\'';
+                    $dsn .= ';options=\'--client_encoding=' . $this->config('charset') . '\'';
                 } else {
                     $dsn .= ';charset=' . $this->config('charset');
                 }
@@ -353,7 +353,8 @@ class Core
             if ($IS_UPDATE || $IS_INSERT) {
                 foreach ($state['uniques'] as $unique) {
                     if (!isset($state['params'][$unique])) {
-                        trigger_error("$unique not found, Add $unique to your insert or update items or check your spelling.");
+                        // trigger_error("$unique not found, Add $unique to your insert or update items or check your spelling.");
+                        continue;
                     }
 
                     if ($this->connection->query("SELECT * FROM {$state['table']} WHERE $unique='{$state['params'][$unique]}'")->fetch(\PDO::FETCH_ASSOC)) {
