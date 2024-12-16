@@ -36,7 +36,7 @@ class Builder
             $query .= " ORDER BY $column " . strtoupper($direction);
         } else {
             $parts = explode('ORDER BY ', $query);
-            $query = implode("ORDER BY $column " . strtoupper($direction) . ", ", $parts);
+            $query = implode("ORDER BY $column " . strtoupper($direction) . ', ', $parts);
         }
 
         return $query;
@@ -115,8 +115,8 @@ class Builder
         string $query,
         $condition,
         $value = null,
-        string $comparator = "=",
-        string $operation = "AND"
+        string $comparator = '=',
+        string $operation = 'AND'
     ): string {
         $query .= (strpos($query, ' WHERE ') === false) ? ' WHERE ' : " $operation ";
 

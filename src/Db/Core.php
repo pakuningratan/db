@@ -208,11 +208,11 @@ class Core
         if ($dbtype === 'sqlite') {
             $dsn = "sqlite:$dbname";
         } elseif ($dbtype === 'sqlsrv') {
-            $dsn = $dbtype . ":Server=" . $this->config('host');
+            $dsn = $dbtype . ':Server=' . $this->config('host');
             if ($this->config('port')) {
-                $dsn .= "," . $this->config('port');
+                $dsn .= ',' . $this->config('port');
             }
-            $dsn .= ";Database=" . $this->config('dbname');
+            $dsn .= ';Database=' . $this->config('dbname');
         } else {
             $dsn = "$dbtype:host=$host";
 
@@ -548,8 +548,8 @@ class Core
      */
     protected function clearState()
     {
-        $this->table = "";
-        $this->query = "";
+        $this->table = '';
+        $this->query = '';
         $this->bindings = [];
         $this->uniques = [];
         $this->hidden = [];

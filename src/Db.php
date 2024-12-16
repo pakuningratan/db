@@ -201,7 +201,7 @@ class Db extends Db\Core
      * @param string $table Db Table
      * @param string $items Specific table columns to fetch
      */
-    public function select(string $table, string $items = "*")
+    public function select(string $table, string $items = '*')
     {
         $this->query("SELECT $items FROM $table");
         $this->table = $table;
@@ -276,7 +276,7 @@ class Db extends Db\Core
             $this->query,
             $condition,
             $value === null ? $comparator : $value,
-            $value === null ? "=" : $comparator
+            $value === null ? '=' : $comparator
         );
 
         $this->bind(...(Builder::$bindings));
@@ -297,8 +297,8 @@ class Db extends Db\Core
             $this->query,
             $condition,
             $value === null ? $comparator : $value,
-            $value === null ? "=" : $comparator,
-            "OR"
+            $value === null ? '=' : $comparator,
+            'OR'
         );
         $this->bind(...(Builder::$bindings));
 
@@ -365,7 +365,7 @@ class Db extends Db\Core
      */
     public function beginTransaction(): self
     {
-        $this->query("START TRANSACTION");
+        $this->query('START TRANSACTION');
         $this->execute();
 
         return $this;
@@ -378,7 +378,7 @@ class Db extends Db\Core
      */
     public function commit(): self
     {
-        $this->query("COMMIT");
+        $this->query('COMMIT');
         $this->execute();
 
         return $this;
@@ -391,7 +391,7 @@ class Db extends Db\Core
      */
     public function rollback(): self
     {
-        $this->query("ROLLBACK");
+        $this->query('ROLLBACK');
         $this->execute();
 
         return $this;
