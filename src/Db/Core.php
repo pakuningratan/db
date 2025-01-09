@@ -107,6 +107,38 @@ class Core
     }
 
     /**
+     * Load db credentials, but defer connection until needed
+     * 
+     * @param string|array $host Host Name or full config
+     * @param string $dbname Database name
+     * @param string $user Database username
+     * @param string $password Database password
+     * @param string $dbtype Type of database: mysql, postgres, sqlite, ...
+     * @param array $pdoOptions Options for PDO connection
+     */
+    public function load(
+        $host = '127.0.0.1',
+        string $dbname = '',
+        string $user = 'root',
+        string $password = '',
+        string $dbtype = 'mysql',
+        array $pdoOptions = []
+    ): Core {
+        $this->config([
+            'deferred' => [
+                $host,
+                $dbname,
+                $user,
+                $password,
+                $dbtype,
+                $pdoOptions,
+            ],
+        ]);
+
+        return $this;
+    }
+
+    /**
      * Connect to database
      *
      * @param string|array $host Host Name or full config
@@ -240,13 +272,18 @@ class Core
     /**
      * Return the database connection
      *
-     * @param \PDO $connection Manual instance of PDO connection
+     * @param \PDO|null $connection Manual instance of PDO connection
      */
-    public function connection(\PDO $connection = null)
+    public function connection(?\PDO $connection = null)
     {
         if (!$connection) {
+            if (!$this->connection && $this->config('deferred')) {
+                $this->connect(...((array) $this->config('deferred')));
+            }
+
             return $this->connection;
         }
+
         $this->connection = $connection;
     }
 
@@ -265,7 +302,7 @@ class Core
      */
     public function lastInsertId($name = null)
     {
-        return $this->connection->lastInsertId();
+        return $this->connection()->lastInsertId();
     }
 
     /**
@@ -357,7 +394,7 @@ class Core
                         continue;
                     }
 
-                    if ($this->connection->query("SELECT * FROM {$state['table']} WHERE $unique='{$state['params'][$unique]}'")->fetch(\PDO::FETCH_ASSOC)) {
+                    if ($this->connection()->query("SELECT * FROM {$state['table']} WHERE $unique='{$state['params'][$unique]}'")->fetch(\PDO::FETCH_ASSOC)) {
                         $this->errors[$unique] = "$unique already exists";
                     }
                 }
@@ -371,9 +408,9 @@ class Core
         }
 
         if (count($state['bindings']) === 0) {
-            $this->queryResult = $this->connection->query($state['query']);
+            $this->queryResult = $this->connection()->query($state['query']);
         } else {
-            $stmt = $this->connection->prepare($state['query']);
+            $stmt = $this->connection()->prepare($state['query']);
             $stmt->execute($state['bindings']);
 
             $this->queryResult = $stmt;
