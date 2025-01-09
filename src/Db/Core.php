@@ -108,7 +108,7 @@ class Core
 
     /**
      * Load db credentials, but defer connection until needed
-     * 
+     *
      * @param string|array $host Host Name or full config
      * @param string $dbname Database name
      * @param string $user Database username
@@ -376,7 +376,7 @@ class Core
      */
     public function execute()
     {
-        if ($this->connection === null) {
+        if ($this->connection() === null) {
             trigger_error('Initialise your database first with connect()');
         }
 
